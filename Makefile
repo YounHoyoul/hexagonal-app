@@ -27,7 +27,7 @@ bash:
 	$(DOCKER_COMPOSE) exec -it $(APP_CONTAINER) bash
 
 .PHONY: down
-destroy:
+down:
 	$(DOCKER_COMPOSE) down
 
 .PHONY: logs
