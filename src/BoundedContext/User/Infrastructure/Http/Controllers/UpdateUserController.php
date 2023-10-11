@@ -15,8 +15,8 @@ use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 final class UpdateUserController
 {
     public function __construct(
-        private CommandBusInterface $commandBusInterface,
-        private QueryBusInterface $queryBusInterface
+        private CommandBusInterface $commandBus,
+        private QueryBusInterface $queryBus
     ) {
     }
 
@@ -28,14 +28,14 @@ final class UpdateUserController
         $password = Hash::make($request->input('password'));
         $userRememberToken = null;
 
-        $this->commandBusInterface->dispatch(new UpdateUserCommand(
+        $this->commandBus->dispatch(new UpdateUserCommand(
             id: $id,
             name: $name,
             email: $email,
             password: $password
         ));
 
-        $user = $this->queryBusInterface->ask(new GetUserByIdQuery($id));
+        $user = $this->queryBus->ask(new GetUserByIdQuery($id));
 
         return response(new UserResource($user));
     }

@@ -15,8 +15,8 @@ use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 final class CreateUserController
 {
     public function __construct(
-        private CommandBusInterface $commandBusInterface,
-        private QueryBusInterface $queryBusInterface
+        private CommandBusInterface $commandBus,
+        private QueryBusInterface $queryBus
     ) {
     }
 
@@ -28,13 +28,13 @@ final class CreateUserController
         $password = Hash::make($request->input('password'));
         $userRememberToken = null;
 
-        $this->commandBusInterface->dispatch(new CreateUserCommand(
+        $this->commandBus->dispatch(new CreateUserCommand(
             name: $name,
             email: $email,
             password: $password
         ));
 
-        $newUser = $this->queryBusInterface->ask(new GetUserByCriteriaQuery(
+        $newUser = $this->queryBus->ask(new GetUserByCriteriaQuery(
             name: $name,
             email: $email,
         ));

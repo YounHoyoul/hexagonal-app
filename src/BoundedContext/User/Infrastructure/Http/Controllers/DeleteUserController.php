@@ -11,12 +11,12 @@ use Src\Shared\Domain\Bus\Command\CommandBusInterface;
 final class DeleteUserController
 {
     public function __construct(
-        private CommandBusInterface $commandBusInterface
+        private CommandBusInterface $commandBus
     ) {
     }
 
     public function __invoke(Request $request, int $id)
     {
-        $this->commandBusInterface->dispatch(new DeleteUserCommand($id));
+        $this->commandBus->dispatch(new DeleteUserCommand($id));
     }
 }

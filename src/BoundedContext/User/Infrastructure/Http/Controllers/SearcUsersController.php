@@ -13,7 +13,7 @@ use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 final class SearcUsersController
 {
     public function __construct(
-        private QueryBusInterface $queryBusInterface
+        private QueryBusInterface $queryBus
     ) {
     }
 
@@ -25,7 +25,7 @@ final class SearcUsersController
         $limit = $request->get('limit') ?? 10;
         $offset = $request->get('offset') ?? 0;
 
-        $users = $this->queryBusInterface->ask(
+        $users = $this->queryBus->ask(
             new SearchUsersQuery(
                 filters: $filters,
                 orderBy: $orderBy,

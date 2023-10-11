@@ -12,13 +12,13 @@ use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 final class GetUserController
 {
     public function __construct(
-        private QueryBusInterface $queryBusInterface
+        private QueryBusInterface $queryBus
     ) {
     }
 
     public function __invoke(Request $request, int $id)
     {
-        $user = $this->queryBusInterface->ask(new GetUserByIdQuery($id));
+        $user = $this->queryBus->ask(new GetUserByIdQuery($id));
 
         return response(new UserResource($user));
     }
