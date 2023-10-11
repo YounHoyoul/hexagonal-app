@@ -1,13 +1,17 @@
-#Base Project
+<h1 align="center">
+  Laravel 10 DDD / CQRS with Inertia.js & Sail
+</h1>
+
+##Base Project
 `mguinea/laravel-ddd-example`
 
-#First Step
+##First Step
 ```
 make build
 make up
 ```
 
-#Folder Structure
+##Folder Structure
 ```
 src/
     BoundedContext/
@@ -41,7 +45,7 @@ src/
 
 ```
 
-#Validation
+##Validation
 1. implement `ValidateInterface` on Command
 2. add `rules` method
 ```
@@ -77,9 +81,7 @@ if ($command instanceof ValidateInterface) {
 
 * Using Laravel's Validation with Command following the rule of https://laravel.com/docs/10.x/validation
 
-
-
-#PHP xDebug
+##PHP xDebug
 In order to enable xDebug with Laravel Sail
 1.add below in /docker/8.2/php.ini
 ```
