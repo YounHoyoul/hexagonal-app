@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\BoundedContext\User\Infrastructure\Http\Controllers;
+namespace Src\BoundedContext\User\Infrastructure\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use Src\BoundedContext\User\Application\Get\GetUserByIdQuery;
