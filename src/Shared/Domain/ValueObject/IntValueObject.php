@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 abstract class IntValueObject
 {
-    public function __construct(public readonly int $value)
+    public function __construct(public readonly ?int $value)
     {
         $this->validate($this->value);
     }
@@ -18,7 +18,7 @@ abstract class IntValueObject
         return new static($value);
     }
 
-    public function value(): int
+    public function value(): ?int
     {
         return $this->value;
     }
@@ -26,7 +26,7 @@ abstract class IntValueObject
     /**
      * @throws InvalidArgumentException
      */
-    private function validate(int $id): void
+    private function validate(?int $id): void
     {
         $options = [
             'options' => [

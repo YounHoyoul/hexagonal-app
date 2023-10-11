@@ -21,7 +21,7 @@ final class SearchUsersQueryHandler implements QueryHandlerInterface
     {
         $order = $query->order;
         $criteria = new Criteria(
-            array_map(function($filter){
+            array_map(function ($filter) {
                 return null;
             }, $query->filters),
             array_map(function ($orderBy) use ($order) {

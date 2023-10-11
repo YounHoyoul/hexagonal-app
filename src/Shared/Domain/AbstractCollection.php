@@ -39,6 +39,11 @@ abstract class AbstractCollection
         return count($this->all());
     }
 
+    public function any(): bool
+    {
+        return $this->count() > 0;
+    }
+
     public function all(): array
     {
         return $this->items;

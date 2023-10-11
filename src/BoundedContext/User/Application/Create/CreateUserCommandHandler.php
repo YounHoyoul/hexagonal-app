@@ -20,9 +20,9 @@ final class CreateUserCommandHandler implements CommandHandlerInterface
     public function __invoke(CreateUserCommand $command): void
     {
         $this->action->__invoke(
-            userName: UserName::fromValue($command->name),
-            userEmail: UserEmail::fromValue($command->email),
-            userPassword: UserPassword::fromValue($command->password),
+            name: UserName::fromValue($command->name),
+            email: UserEmail::fromValue($command->email),
+            password: UserPassword::fromValue($command->password),
         );
     }
 }

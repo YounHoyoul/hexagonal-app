@@ -26,14 +26,13 @@ final class CreateUserAction
     }
 
     public function __invoke(
-        UserName $userName,
-        UserEmail $userEmail,
-        UserPassword $userPassword,
+        UserName $name,
+        UserEmail $email,
+        UserPassword $password,
     ): void {
-
         $user = $this->repository->findOneByCriteria(new Criteria(filters: [
-            new Filter('email', FilterOperator::EQUAL, $userEmail->value()),
-            new Filter('name', FilterOperator::EQUAL, $userName->value()),
+            new Filter('email', FilterOperator::EQUAL, $email->value()),
+            new Filter('name', FilterOperator::EQUAL, $name->value()),
         ]));
 
         if ($user !== null) {
@@ -41,9 +40,9 @@ final class CreateUserAction
         }
 
         $user = User::create(
-            name: $userName,
-            email: $userEmail,
-            password: $userPassword,
+            name: $name,
+            email: $email,
+            password: $password,
             emailVerifiedDate: UserEmailVerifiedDate::fromValue(null),
             rememberToken: UserRememberToken::fromValue(null)
         );
