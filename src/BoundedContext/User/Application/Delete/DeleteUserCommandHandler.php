@@ -17,6 +17,6 @@ final class DeleteUserCommandHandler implements CommandHandlerInterface
 
     public function __invoke(DeleteUserCommand $command): void
     {
-        $this->action->__invoke(userId : UserId::fromValue($command->id));
+        $this->action->__invoke(id : UserId::fromValue($command->id));
     }
 }

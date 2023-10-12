@@ -9,6 +9,12 @@
 ```
 make build
 make up
+make bash # run bash of laravel.test container
+```
+In the laravel.test container
+```
+composer install
+php artisan test
 ```
 
 ##Folder Structure

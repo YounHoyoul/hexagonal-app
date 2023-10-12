@@ -8,10 +8,11 @@ use Src\BoundedContext\User\Domain\Exceptions\UserNotFound;
 use Src\BoundedContext\User\Domain\Repositories\UserRepositoryInterface;
 use Src\BoundedContext\User\Domain\User;
 use Src\BoundedContext\User\Domain\ValueObjects\UserId;
+use Src\Shared\Domain\Action\QueryActionInterface;
 
-final class FindUserAction
+final class FindUserAction implements QueryActionInterface
 {
-    public function __construct(private UserRepositoryInterface $repository)
+    public function __construct(private readonly UserRepositoryInterface $repository)
     {
     }
 

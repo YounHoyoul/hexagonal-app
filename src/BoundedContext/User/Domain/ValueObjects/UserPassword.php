@@ -9,12 +9,12 @@ use Src\Shared\Domain\ValueObject\StringValueObject;
 
 final class UserPassword extends StringValueObject implements ValidateItemInterface
 {
-    public static function rule() : array 
+    public static function rule(): array
     {
         return [
             'required',
             'string',
-            'min:3'
+            'min:3',
         ];
     }
 }

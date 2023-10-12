@@ -1,4 +1,4 @@
-PROJECT_NAME="haxagonal-ddd"
+PROJECT_NAME="haxagonal-app"
 DOCKER_COMPOSE=docker-compose -p $(PROJECT_NAME) -f ./docker-compose.yml
 APP_CONTAINER="laravel.test"
 

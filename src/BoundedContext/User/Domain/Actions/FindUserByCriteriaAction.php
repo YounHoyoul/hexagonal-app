@@ -9,13 +9,14 @@ use Src\BoundedContext\User\Domain\Repositories\UserRepositoryInterface;
 use Src\BoundedContext\User\Domain\User;
 use Src\BoundedContext\User\Domain\ValueObjects\UserEmail;
 use Src\BoundedContext\User\Domain\ValueObjects\UserName;
+use Src\Shared\Domain\Action\QueryActionInterface;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\Criteria\Filter;
 use Src\Shared\Domain\Criteria\FilterOperator;
 
-final class FindUserByCriteriaAction
+final class FindUserByCriteriaAction implements QueryActionInterface
 {
-    public function __construct(private UserRepositoryInterface $repository)
+    public function __construct(private readonly UserRepositoryInterface $repository)
     {
     }
 

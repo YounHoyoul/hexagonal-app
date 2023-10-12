@@ -6,11 +6,13 @@ use Illuminate\Support\ServiceProvider;
 use Src\Shared\Domain\Bus\Command\CommandBusInterface;
 use Src\Shared\Domain\Bus\Event\EventBusInterface;
 use Src\Shared\Domain\Bus\Query\QueryBusInterface;
+use Src\Shared\Domain\Contracts\ValidationCheckContract;
 use Src\Shared\Domain\UuidGeneratorInterface;
 use Src\Shared\Infrastructure\Bus\Messenger\MessengerCommandBus;
 use Src\Shared\Infrastructure\Bus\Messenger\MessengerEventBus;
 use Src\Shared\Infrastructure\Bus\Messenger\MessengerQueryBus;
 use Src\Shared\Infrastructure\RamseyUuidGenerator;
+use Src\Shared\Infrastructure\validationChecker;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +45,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             UuidGeneratorInterface::class,
             RamseyUuidGenerator::class
+        );
+
+        $this->app->bind(
+            ValidationCheckContract::class,
+            validationChecker::class
         );
     }
 

@@ -9,11 +9,11 @@ use Src\Shared\Domain\ValueObject\IntValueObject;
 
 final class UserId extends IntValueObject implements ValidateItemInterface
 {
-    public static function rule() : array 
+    public static function rule(): array
     {
         return [
             'required',
-            'integer'
+            'integer',
         ];
     }
 }
