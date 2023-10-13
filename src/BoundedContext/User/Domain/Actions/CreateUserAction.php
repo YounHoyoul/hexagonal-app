@@ -12,15 +12,18 @@ use Src\BoundedContext\User\Domain\ValueObjects\UserEmailVerifiedDate;
 use Src\BoundedContext\User\Domain\ValueObjects\UserName;
 use Src\BoundedContext\User\Domain\ValueObjects\UserPassword;
 use Src\BoundedContext\User\Domain\ValueObjects\UserRememberToken;
-use Src\Shared\Domain\Action\CommandActionInterface;
+use Src\Shared\Domain\Action\ActionValidatable;
+use Src\Shared\Domain\Action\CommandAction;
 use Src\Shared\Domain\Bus\Event\EventBusInterface;
 use Src\Shared\Domain\Contracts\ValidationCheckContract;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\Criteria\Filter;
 use Src\Shared\Domain\Criteria\FilterOperator;
 
-final class CreateUserAction implements CommandActionInterface
+final class CreateUserAction extends CommandAction
 {
+    use ActionValidatable;
+
     public function __construct(
         private readonly UserRepositoryInterface $repository,
         private readonly EventBusInterface $eventBus,
@@ -28,22 +31,11 @@ final class CreateUserAction implements CommandActionInterface
     ) {
     }
 
-    public function __invoke(
+    protected function handle(
         UserName $name,
         UserEmail $email,
         UserPassword $password,
-    ): void {
-
-        $this->validationChecker->pass([
-            'name' => $name->value(),
-            'email' => $email->value(),
-            'password' => $password->value(),
-        ], [
-            'name' => UserName::rule(),
-            'email' => UserEmail::rule(),
-            'password' => UserPassword::rule(),
-        ]);
-
+    ) {
         $user = $this->repository->findOneByCriteria(new Criteria(filters: [
             new Filter('email', FilterOperator::EQUAL, $email->value()),
             new Filter('name', FilterOperator::EQUAL, $name->value()),

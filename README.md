@@ -52,22 +52,12 @@ src/
 ```
 
 ##Validation
-1. implement `ValidateInterface` on Command
-2. add `rules` method
+1. a new Action class extends `CommandAction` which will run related rules automatically.
+2. it has `handle` method to add the domain business logic.
+3. a ValueObject implements `ValidateItemInterface`
+4. it has `rule` mothod
 ```
-public function rules(): array
-{
-    return [
-        'name' => UserName::rule(),
-        'email' => UserEmail::rule(),
-        'password' => UserPassword::rule(),
-    ];
-}
-```
-3. add `ValidateItemInterface` on ValueObject
-4. add `rule` mothod
-```
-public static function rule() : array
+public function rule() : array
 {
     return [
         'required',
@@ -75,12 +65,18 @@ public static function rule() : array
     ];
 }
 ```
-5. When the command is dispatched, the validation is checked in `MessengerCommandBus`.
+5. When the command is dispatched, the validation is checked in `CommandAction`.
 ```
-if ($command instanceof ValidateInterface) {
-    $rules = $command->rules();
-    if (! empty($rules)) {
-        Validator::make((array) $command, $rules)->validate();
+public function __invoke(...$args)
+{
+    $class = new ReflectionClass($this);
+    if ($class->hasMethod('validate')) {
+        $class->getMethod('validate')->invoke($this, ...$args);
+    }
+    if ($class->hasMethod('handle')) {
+        $class->getMethod('handle')->invoke($this, ...$args);
+    }else {
+        throw new Exception("Action doesn't implement 'handle' method");
     }
 }
 ```
@@ -149,3 +145,6 @@ SAIL_XDEBUG_MODE=develop,debug
 ```
 make up
 ```
+
+##reference
+https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/

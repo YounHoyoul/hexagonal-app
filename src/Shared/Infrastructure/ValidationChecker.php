@@ -7,8 +7,10 @@ use Src\Shared\Domain\Contracts\ValidationCheckContract;
 
 final class validationChecker implements ValidationCheckContract
 {
-    public function pass(array $data, array $rules)
+    public function pass(array $data, array $rules): bool
     {
         Validator::make($data, $rules)->validate();
+
+        return true;
     }
 }

@@ -6,5 +6,5 @@ namespace Src\Shared\Domain\Contracts;
 
 interface ValidationCheckContract
 {
-    public function pass(array $data, array $rules);
+    public function pass(array $data, array $rules): bool;
 }

@@ -6,5 +6,5 @@ namespace Src\Shared\Domain\Validation;
 
 interface ValidateItemInterface
 {
-    public static function rule(): array|string;
+    public function rule(): array|string|object;
 }

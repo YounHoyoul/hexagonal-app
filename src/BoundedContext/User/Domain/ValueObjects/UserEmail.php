@@ -9,7 +9,7 @@ use Src\Shared\Domain\ValueObject\EmailValueObject;
 
 final class UserEmail extends EmailValueObject implements ValidateItemInterface
 {
-    public static function rule(): array
+    public function rule(): array
     {
         return [
             'required',

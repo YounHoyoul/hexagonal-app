@@ -10,29 +10,22 @@ use Src\BoundedContext\User\Domain\User;
 use Src\BoundedContext\User\Domain\ValueObjects\UserEmail;
 use Src\BoundedContext\User\Domain\ValueObjects\UserId;
 use Src\BoundedContext\User\Domain\ValueObjects\UserName;
-use Src\Shared\Domain\Action\CommandActionInterface;
+use Src\Shared\Domain\Action\ActionValidatable;
+use Src\Shared\Domain\Action\CommandAction;
 use Src\Shared\Domain\Contracts\ValidationCheckContract;
 
-final class UpdateUserAction implements CommandActionInterface
+final class UpdateUserAction extends CommandAction
 {
+    use ActionValidatable;
+
     public function __construct(
         private readonly UserRepositoryInterface $repository,
         private readonly ValidationCheckContract $validationChecker
     ) {
     }
 
-    public function __invoke(UserId $id, UserName $name, UserEmail $email): void
+    protected function handle(UserId $id, UserName $name, UserEmail $email): void
     {
-        $this->validationChecker->pass([
-            'name' => $name->value(),
-            'email' => $email->value(),
-            'id' => $id->value(),
-        ], [
-            'name' => UserName::rule(),
-            'email' => UserEmail::rule(),
-            'id' => UserId::rule(),
-        ]);
-
         $user = $this->repository->find($id);
 
         if ($user === null) {
