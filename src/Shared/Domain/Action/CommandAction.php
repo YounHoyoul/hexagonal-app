@@ -17,7 +17,7 @@ abstract class CommandAction implements CommandActionInterface
         }
         if ($class->hasMethod('handle')) {
             $class->getMethod('handle')->invoke($this, ...$args);
-        }else {
+        } else {
             throw new Exception("Action doesn't implement 'handle' method");
         }
     }
