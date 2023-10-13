@@ -12,7 +12,7 @@ use Src\Shared\Infrastructure\Bus\Messenger\MessengerCommandBus;
 use Src\Shared\Infrastructure\Bus\Messenger\MessengerEventBus;
 use Src\Shared\Infrastructure\Bus\Messenger\MessengerQueryBus;
 use Src\Shared\Infrastructure\RamseyUuidGenerator;
-use Src\Shared\Infrastructure\validationChecker;
+use Src\Shared\Infrastructure\ValidationChecker;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             ValidationCheckContract::class,
-            validationChecker::class
+            ValidationChecker::class
         );
     }
 
