@@ -8,10 +8,9 @@ use Src\BoundedContext\User\Domain\Exceptions\UserAlreadyExists;
 use Src\BoundedContext\User\Domain\Repositories\UserRepositoryInterface;
 use Src\BoundedContext\User\Domain\User;
 use Src\BoundedContext\User\Domain\ValueObjects\UserEmail;
-use Src\BoundedContext\User\Domain\ValueObjects\UserEmailVerifiedDate;
 use Src\BoundedContext\User\Domain\ValueObjects\UserName;
 use Src\BoundedContext\User\Domain\ValueObjects\UserPassword;
-use Src\BoundedContext\User\Domain\ValueObjects\UserRememberToken;
+use Src\BoundedContext\User\Domain\ValueObjects\UserPasswordConfirmation;
 use Src\Shared\Domain\Action\ActionValidatable;
 use Src\Shared\Domain\Action\CommandAction;
 use Src\Shared\Domain\Bus\Event\EventBusInterface;
@@ -35,6 +34,7 @@ final class CreateUserAction extends CommandAction
         UserName $name,
         UserEmail $email,
         UserPassword $password,
+        UserPasswordConfirmation $password_confirmation
     ) {
         $user = $this->repository->findOneByCriteria(new Criteria(filters: [
             new Filter('email', FilterOperator::EQUAL, $email->value()),
@@ -48,9 +48,7 @@ final class CreateUserAction extends CommandAction
         $user = User::create(
             name: $name,
             email: $email,
-            password: $password,
-            emailVerifiedDate: UserEmailVerifiedDate::fromValue(null),
-            rememberToken: UserRememberToken::fromValue(null)
+            password: $password
         );
         $this->repository->save($user);
 

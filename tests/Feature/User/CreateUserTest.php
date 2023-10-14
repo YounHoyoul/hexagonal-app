@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\User;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,6 +30,7 @@ class CreateUserTest extends TestCase
             'name' => 'Firstname Lastname',
             'email' => 'firstname.lastname@email.com',
             'password' => 'password',
+            'password_confirmation' => 'password',
         ];
     }
 }

@@ -7,15 +7,10 @@ namespace Src\BoundedContext\User\Domain\ValueObjects;
 use Src\Shared\Domain\Validation\ValidateItemInterface;
 use Src\Shared\Domain\ValueObject\StringValueObject;
 
-final class UserPassword extends StringValueObject implements ValidateItemInterface
+final class UserPasswordConfirmation extends StringValueObject implements ValidateItemInterface
 {
     public function rule(): array
     {
-        return [
-            'required',
-            'string',
-            'min:3',
-            'confirmed',
-        ];
+        return [];
     }
 }

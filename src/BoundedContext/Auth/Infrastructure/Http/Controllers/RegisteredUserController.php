@@ -2,16 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Src\BoundedContext\User\Infrastructure\Http\Controllers\API;
+namespace Src\BoundedContext\Auth\Infrastructure\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 use Src\BoundedContext\User\Application\Create\CreateUserCommand;
 use Src\BoundedContext\User\Application\Get\GetUserByCriteriaQuery;
-use Src\BoundedContext\User\Infrastructure\Http\Resources\UserResource;
 use Src\Shared\Domain\Bus\Command\CommandBusInterface;
 use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 
-final class CreateUserController
+class RegisteredUserController extends Controller
 {
     public function __construct(
         private CommandBusInterface $commandBus,
@@ -19,14 +24,25 @@ final class CreateUserController
     ) {
     }
 
-    public function __invoke(Request $request)
+    /**
+     * Display the registration view.
+     */
+    public function create(): Response
+    {
+        return Inertia::render('Auth/Register');
+    }
+
+    /**
+     * Handle an incoming registration request.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function store(Request $request): RedirectResponse
     {
         $name = $request->input('name');
         $email = $request->input('email');
-        $userEmailVerifiedDate = null;
         $password = $request->input('password');
         $password_confirmation = $request->input('password_confirmation');
-        $userRememberToken = null;
 
         $this->commandBus->dispatch(new CreateUserCommand(
             name: $name,
@@ -40,6 +56,10 @@ final class CreateUserController
             email: $email,
         ));
 
-        return response(new UserResource($newUser), 201);
+        $user = \App\Models\User::find($newUser->id);
+
+        Auth::login($user);
+
+        return redirect(RouteServiceProvider::HOME);
     }
 }

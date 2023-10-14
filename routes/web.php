@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 require __DIR__.'/../src/BoundedContext/User/Infrastructure/routes/web.php';
+require __DIR__.'/../src/BoundedContext/Auth/Infrastructure/routes/web.php';

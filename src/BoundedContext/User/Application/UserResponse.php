@@ -10,6 +10,7 @@ use Src\Shared\Domain\Bus\Query\ResponseInterface;
 final class UserResponse implements ResponseInterface
 {
     public function __construct(
+        public readonly int $id,
         public readonly string $name,
         public readonly string $email
     ) {
@@ -18,6 +19,7 @@ final class UserResponse implements ResponseInterface
     public static function fromUser(User $user): self
     {
         return new self(
+            $user->id->value(),
             $user->name->value(),
             $user->email->value()
         );

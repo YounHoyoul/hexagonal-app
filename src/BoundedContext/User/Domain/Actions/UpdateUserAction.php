@@ -33,6 +33,7 @@ final class UpdateUserAction extends CommandAction
         }
 
         $user = User::fromPrimitives(
+            id: $id->value(),
             email: $email->value(),
             name: $name->value()
         );

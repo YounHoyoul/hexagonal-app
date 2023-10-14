@@ -7,11 +7,13 @@
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
+        "inertiajs/inertia-laravel": "^0.6.10",
         "lambdish/phunctional": "^2.1",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
-        "symfony/messenger": "^6.3"
+        "symfony/messenger": "^6.3",
+        "tightenco/ziggy": "^1.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
