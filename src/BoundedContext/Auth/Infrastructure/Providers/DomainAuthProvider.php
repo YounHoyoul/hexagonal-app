@@ -15,6 +15,7 @@ use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\Criteria\Filter;
 use Src\Shared\Domain\Criteria\FilterOperator;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 class DomainAuthProvider implements UserProvider
 {
@@ -86,7 +87,7 @@ class DomainAuthProvider implements UserProvider
             if ($this->validateCredentials($user, $credentials)) {
                 return $user;
             }
-        } catch (UserNotFound $e) {
+        } catch (HandlerFailedException $e) {
         }
 
         return null;
