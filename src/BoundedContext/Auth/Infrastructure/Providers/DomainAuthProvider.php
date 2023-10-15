@@ -9,6 +9,7 @@ use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Src\BoundedContext\User\Application\Get\GetUserByCriteriaQuery;
 use Src\BoundedContext\User\Application\Get\GetUserByIdQuery;
 use Src\BoundedContext\User\Application\Update\UpdateUserTokenCommand;
+use Src\BoundedContext\User\Domain\Exceptions\UserNotFound;
 use Src\Shared\Domain\Bus\Command\CommandBusInterface;
 use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 use Src\Shared\Domain\Criteria\Criteria;
@@ -75,14 +76,17 @@ class DomainAuthProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        $userResponse = $this->queryBus->ask(new GetUserByCriteriaQuery(new Criteria(filters: [
-            new Filter('email', FilterOperator::EQUAL, $credentials['email']),
-        ])));
+        try {
+            $userResponse = $this->queryBus->ask(new GetUserByCriteriaQuery(new Criteria(filters: [
+                new Filter('email', FilterOperator::EQUAL, $credentials['email']),
+            ])));
 
-        $user = User::find($userResponse->id);
+            $user = User::find($userResponse->id);
 
-        if ($this->validateCredentials($user, $credentials)) {
-            return $user;
+            if ($this->validateCredentials($user, $credentials)) {
+                return $user;
+            }
+        } catch (UserNotFound $e) {
         }
 
         return null;
