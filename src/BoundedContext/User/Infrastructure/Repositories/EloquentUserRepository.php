@@ -10,6 +10,7 @@ use Src\BoundedContext\User\Domain\Repositories\UserRepositoryInterface;
 use Src\BoundedContext\User\Domain\User;
 use Src\BoundedContext\User\Domain\Users;
 use Src\BoundedContext\User\Domain\ValueObjects\UserId;
+use Src\BoundedContext\User\Domain\ValueObjects\UserRememberToken;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Infrastructure\Eloquent\EloquentCriteriaTransformer;
 
@@ -27,7 +28,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
             return null;
         }
 
-        return $this->toDomain($user);
+        return $user->toDomain();
     }
 
     public function findOneByCriteria(Criteria $criteria): ?User
@@ -40,7 +41,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
             return null;
         }
 
-        return $this->toDomain($user);
+        return $user->toDomain();
     }
 
     public function findByCriteria(Criteria $criteria): Users
@@ -51,20 +52,11 @@ final class EloquentUserRepository implements UserRepositoryInterface
 
         $users = $eloquentUsers->map(
             function (EloquentModel $eloquentUser) {
-                return $this->toDomain($eloquentUser);
+                return $eloquentUser->toDomain();
             }
         )->toArray();
 
         return new Users($users);
-    }
-
-    private function toDomain(eloquentModel $eloquentModel): User
-    {
-        return User::fromPrimitives(
-            id: $eloquentModel->id,
-            name: $eloquentModel->name,
-            email: $eloquentModel->email
-        );
     }
 
     public function save(User $user): void
@@ -89,6 +81,19 @@ final class EloquentUserRepository implements UserRepositoryInterface
         $data = [
             'name' => $user->name->value(),
             'email' => $user->email->value(),
+        ];
+
+        $userToUpdate
+            ->findOrFail($id->value())
+            ->update($data);
+    }
+
+    public function updateToken(UserId $id, UserRememberToken $token): void
+    {
+        $userToUpdate = $this->eloquentModel;
+
+        $data = [
+            'remember_token' => $token->value(),
         ];
 
         $userToUpdate

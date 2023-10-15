@@ -11,6 +11,7 @@ use Src\BoundedContext\User\Application\Get\GetUserByCriteriaQueryHandler;
 use Src\BoundedContext\User\Application\Get\GetUserByIdQueryHandler;
 use Src\BoundedContext\User\Application\Listing\SearchUsersQueryHandler;
 use Src\BoundedContext\User\Application\Update\UpdateUserCommandHandler;
+use Src\BoundedContext\User\Application\Update\UpdateUserTokenCommandHandler;
 use Src\BoundedContext\User\Domain\Repositories\UserRepositoryInterface;
 use Src\BoundedContext\User\Infrastructure\Repositories\EloquentUserRepository;
 
@@ -38,6 +39,11 @@ class UserServiceProvider extends ServiceProvider
 
         $this->app->tag(
             UpdateUserCommandHandler::class,
+            'command_handler'
+        );
+
+        $this->app->tag(
+            UpdateUserTokenCommandHandler::class,
             'command_handler'
         );
 

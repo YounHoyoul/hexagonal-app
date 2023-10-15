@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Src\BoundedContext\User\Application\UserResponse;
+use Src\BoundedContext\User\Domain\User as DomainUser;
 
 class User extends Authenticatable
 {
@@ -42,4 +44,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public static function fromDomain(UserResponse $userResponse)
+    {
+        $user = new self();
+
+        $user->id = $userResponse->id;
+        $user->name = $userResponse->name;
+        $user->email = $userResponse->email;
+
+        return $user;
+    }
+
+    public function toDomain()
+    {
+        return DomainUser::fromPrimitives(
+            id: $this->id,
+            name: $this->name,
+            email: $this->email
+        );
+    }
 }

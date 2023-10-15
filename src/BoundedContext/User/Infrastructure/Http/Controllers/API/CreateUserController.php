@@ -10,6 +10,9 @@ use Src\BoundedContext\User\Application\Get\GetUserByCriteriaQuery;
 use Src\BoundedContext\User\Infrastructure\Http\Resources\UserResource;
 use Src\Shared\Domain\Bus\Command\CommandBusInterface;
 use Src\Shared\Domain\Bus\Query\QueryBusInterface;
+use Src\Shared\Domain\Criteria\Criteria;
+use Src\Shared\Domain\Criteria\Filter;
+use Src\Shared\Domain\Criteria\FilterOperator;
 
 final class CreateUserController
 {
@@ -36,8 +39,10 @@ final class CreateUserController
         ));
 
         $newUser = $this->queryBus->ask(new GetUserByCriteriaQuery(
-            name: $name,
-            email: $email,
+            new Criteria(filters: [
+                new Filter('email', FilterOperator::EQUAL, $email),
+                new Filter('name', FilterOperator::EQUAL, $name),
+            ])
         ));
 
         return response(new UserResource($newUser), 201);

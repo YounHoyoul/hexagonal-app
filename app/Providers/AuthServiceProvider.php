@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Src\BoundedContext\Auth\Infrastructure\Providers\DomainAuthProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +25,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Auth::provider('domain', function (Application $app, array $config) {
+            return app()->make(DomainAuthProvider::class);
+        });
     }
 }
