@@ -4,8 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Src\BoundedContext\Auth\Infrastructure\HTTP\Controllers\AuthenticatedSessionController;
-use Src\BoundedContext\Auth\Infrastructure\HTTP\Controllers\RegisteredUserController;
+use Src\BoundedContext\Auth\Infrastructure\Http\Controllers\AuthenticatedSessionController;
+use Src\BoundedContext\Auth\Infrastructure\Http\Controllers\RegisteredUserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
