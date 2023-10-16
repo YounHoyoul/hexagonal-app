@@ -17,22 +17,16 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function (Request $request) {
-    return Inertia::render('Dashboard', [
-        'auth' => [
-            'user' => $request->user(),
-        ],
-    ]);
+    return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
-
     Route::post('register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
-
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
 

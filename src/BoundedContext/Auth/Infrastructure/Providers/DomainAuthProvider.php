@@ -9,7 +9,6 @@ use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Src\BoundedContext\User\Application\Get\GetUserByCriteriaQuery;
 use Src\BoundedContext\User\Application\Get\GetUserByIdQuery;
 use Src\BoundedContext\User\Application\Update\UpdateUserTokenCommand;
-use Src\BoundedContext\User\Domain\Exceptions\UserNotFound;
 use Src\Shared\Domain\Bus\Command\CommandBusInterface;
 use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 use Src\Shared\Domain\Criteria\Criteria;
