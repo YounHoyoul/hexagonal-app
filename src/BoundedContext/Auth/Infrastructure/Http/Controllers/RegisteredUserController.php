@@ -13,20 +13,12 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Src\BoundedContext\User\Application\Create\CreateUserCommand;
 use Src\BoundedContext\User\Application\Get\GetUserByCriteriaQuery;
-use Src\Shared\Domain\Bus\Command\CommandBusInterface;
-use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\Criteria\Filter;
 use Src\Shared\Domain\Criteria\FilterOperator;
 
 class RegisteredUserController extends Controller
 {
-    public function __construct(
-        private CommandBusInterface $commandBus,
-        private QueryBusInterface $queryBus
-    ) {
-    }
-
     /**
      * Display the registration view.
      */
@@ -54,12 +46,12 @@ class RegisteredUserController extends Controller
             password_confirmation: $password_confirmation
         ));
 
-        $newUser = $this->queryBus->ask(new GetUserByCriteriaQuery(new Criteria(filters: [
+        $userResponse = $this->queryBus->ask(new GetUserByCriteriaQuery(new Criteria(filters: [
             new Filter('email', FilterOperator::EQUAL, $email),
             new Filter('name', FilterOperator::EQUAL, $name),
         ])));
 
-        $user = \App\Models\User::find($newUser->id);
+        $user = \App\Models\User::fromDomain($userResponse);
 
         Auth::login($user);
 

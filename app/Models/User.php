@@ -52,6 +52,9 @@ class User extends Authenticatable
         $user->id = $userResponse->id;
         $user->name = $userResponse->name;
         $user->email = $userResponse->email;
+        $user->password = $userResponse->password;
+        $user->email_verified_at = $userResponse->emailVerifiedDate;
+        $user->remember_token = $userResponse->rememberToken;
 
         return $user;
     }
@@ -61,7 +64,10 @@ class User extends Authenticatable
         return DomainUser::fromPrimitives(
             id: $this->id,
             name: $this->name,
-            email: $this->email
+            email: $this->email,
+            password: $this->password,
+            emailVerifiedDate: $this->email_verified_at,
+            rememberToken: $this->remember_token
         );
     }
 }

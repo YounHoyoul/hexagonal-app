@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Hash;
 use Src\BoundedContext\User\Domain\Repositories\UserRepositoryInterface;
 use Src\BoundedContext\User\Domain\User;
 use Src\BoundedContext\User\Domain\Users;
+use Src\BoundedContext\User\Domain\ValueObjects\UserEmail;
+use Src\BoundedContext\User\Domain\ValueObjects\UserEmailVerifiedDate;
 use Src\BoundedContext\User\Domain\ValueObjects\UserId;
+use Src\BoundedContext\User\Domain\ValueObjects\UserName;
 use Src\BoundedContext\User\Domain\ValueObjects\UserRememberToken;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Infrastructure\Eloquent\EloquentCriteriaTransformer;
@@ -83,6 +86,18 @@ final class EloquentUserRepository implements UserRepositoryInterface
             'email' => $user->email->value(),
         ];
 
+        if ($user->password?->value()) {
+            $data['password'] = Hash::make($user->password->value());
+        }
+
+        if ($user->emailVerifiedDate?->value()) {
+            $data['email_verified_at'] = $user->emailVerifiedDate->value();
+        }
+
+        if ($user->rememberToken?->value()) {
+            $data['remember_token'] = $user->rememberToken->value();
+        }
+
         $userToUpdate
             ->findOrFail($id->value())
             ->update($data);
@@ -99,6 +114,21 @@ final class EloquentUserRepository implements UserRepositoryInterface
         $userToUpdate
             ->findOrFail($id->value())
             ->update($data);
+    }
+
+    public function updateProfile(
+        UserId $id,
+        UserName $name,
+        UserEmail $email,
+        ?UserEmailVerifiedDate $emailVerifiedDate): void
+    {
+        $user = $this->eloquentModel->findOrFail($id->value());
+        
+        $user->name = $name->value();
+        $user->email = $email->value();
+        $user->email_verified_at = $emailVerifiedDate?->value();
+
+        $user->save();
     }
 
     public function delete(UserId $id): void

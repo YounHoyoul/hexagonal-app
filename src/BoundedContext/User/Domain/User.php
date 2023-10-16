@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\BoundedContext\User\Domain;
 
+use DateTime;
 use Src\BoundedContext\User\Domain\Events\UserWasCreated;
 use Src\BoundedContext\User\Domain\ValueObjects\UserEmail;
 use Src\BoundedContext\User\Domain\ValueObjects\UserEmailVerifiedDate;
@@ -25,12 +26,21 @@ final class User extends AggregateRoot
     ) {
     }
 
-    public static function fromPrimitives(int $id, string $name, string $email): User
-    {
+    public static function fromPrimitives(
+        ?int $id,
+        string $name,
+        string $email,
+        ?string $password,
+        ?DateTime $emailVerifiedDate,
+        ?string $rememberToken,
+    ): User {
         return new self(
-            id: UserId::fromValue($id),
+            id: ($id ? UserId::fromValue($id) : null),
             name: UserName::fromValue($name),
-            email: UserEmail::fromValue($email)
+            email: UserEmail::fromValue($email),
+            password: ($password ? UserPassword::fromValue($password) : null),
+            emailVerifiedDate: ($emailVerifiedDate ? UserEmailVerifiedDate::fromValue($emailVerifiedDate) : null),
+            rememberToken: ($rememberToken ? UserRememberToken::fromValue($rememberToken) : null)
         );
     }
 

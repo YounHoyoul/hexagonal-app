@@ -14,17 +14,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
-use Src\Shared\Domain\Bus\Command\CommandBusInterface;
-use Src\Shared\Domain\Bus\Query\QueryBusInterface;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function __construct(
-        private CommandBusInterface $commandBus,
-        private QueryBusInterface $queryBus
-    ) {
-    }
-
     /**
      * Display the login view.
      */

@@ -11,12 +11,27 @@ use Src\BoundedContext\User\Application\Get\GetUserByCriteriaQueryHandler;
 use Src\BoundedContext\User\Application\Get\GetUserByIdQueryHandler;
 use Src\BoundedContext\User\Application\Listing\SearchUsersQueryHandler;
 use Src\BoundedContext\User\Application\Update\UpdateUserCommandHandler;
+use Src\BoundedContext\User\Application\Update\UpdateUserProfileCommandHandler;
 use Src\BoundedContext\User\Application\Update\UpdateUserTokenCommandHandler;
 use Src\BoundedContext\User\Domain\Repositories\UserRepositoryInterface;
 use Src\BoundedContext\User\Infrastructure\Repositories\EloquentUserRepository;
 
 class UserServiceProvider extends ServiceProvider
 {
+    private $commandHandlers = [
+        CreateUserCommandHandler::class,
+        DeleteUserCommandHandler::class,
+        UpdateUserCommandHandler::class,
+        UpdateUserProfileCommandHandler::class,
+        UpdateUserTokenCommandHandler::class
+    ];
+
+    private $queryHandlers = [
+        GetUserByCriteriaQueryHandler::class,
+        GetUserByIdQueryHandler::class,
+        SearchUsersQueryHandler::class,
+    ];
+
     /**
      * Register any application services.
      */
@@ -24,43 +39,19 @@ class UserServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             UserRepositoryInterface::class,
-            EloquentUserRepository::class
+            EloquentUserRepository::class,
         );
 
-        $this->app->tag(
-            CreateUserCommandHandler::class,
-            'command_handler'
+        array_walk(
+            $this->commandHandlers,
+            fn ($className) => $this->app->tag($className, 'command_handler')
         );
 
-        $this->app->tag(
-            DeleteUserCommandHandler::class,
-            'command_handler'
+        array_walk(
+            $this->queryHandlers,
+            fn ($className) => $this->app->tag($className, 'query_handler')
         );
 
-        $this->app->tag(
-            UpdateUserCommandHandler::class,
-            'command_handler'
-        );
-
-        $this->app->tag(
-            UpdateUserTokenCommandHandler::class,
-            'command_handler'
-        );
-
-        $this->app->tag(
-            GetUserByCriteriaQueryHandler::class,
-            'query_handler'
-        );
-
-        $this->app->tag(
-            GetUserByIdQueryHandler::class,
-            'query_handler'
-        );
-
-        $this->app->tag(
-            SearchUsersQueryHandler::class,
-            'query_handler'
-        );
     }
 
     /**

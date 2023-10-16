@@ -38,7 +38,6 @@ final class CreateUserAction extends CommandAction
     ) {
         $user = $this->repository->findOneByCriteria(new Criteria(filters: [
             new Filter('email', FilterOperator::EQUAL, $email->value()),
-            new Filter('name', FilterOperator::EQUAL, $name->value()),
         ]));
 
         if ($user !== null) {

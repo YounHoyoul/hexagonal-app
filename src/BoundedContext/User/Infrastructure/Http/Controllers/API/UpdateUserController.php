@@ -32,7 +32,8 @@ final class UpdateUserController
             id: $id,
             name: $name,
             email: $email,
-            password: $password
+            password: $password,
+            password_confirmation: $password
         ));
 
         $user = $this->queryBus->ask(new GetUserByIdQuery($id));
