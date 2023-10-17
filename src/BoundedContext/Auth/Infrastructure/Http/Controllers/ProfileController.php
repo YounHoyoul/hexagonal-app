@@ -8,7 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Src\BoundedContext\User\Application\Delete\DeleteUserCommand;
@@ -46,25 +45,15 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $userId = $request->user()->id;
-
-        if (! Auth::guard('web')->validate([
-            'email' => $request->user()->email,
-            'password' => $request->password,
-        ])) {
-            throw ValidationException::withMessages([
-                'password' => __('auth.password'),
-            ]);
-        }
-
-        Auth::logout();
-
         $this->commandBus->dispatch(new DeleteUserCommand(
-            id: $userId,
+            id: $request->user()->id,
+            password: $request->password,
+            callback: function () use ($request) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
         ));
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         return Redirect::to('/');
     }

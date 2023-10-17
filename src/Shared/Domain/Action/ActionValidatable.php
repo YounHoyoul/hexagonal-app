@@ -8,6 +8,7 @@ use Exception;
 use ReflectionClass;
 use ReflectionMethod;
 use Src\Shared\Domain\Contracts\ValidationCheckContract;
+use Src\Shared\Domain\Validation\ValidateItemInterface;
 
 trait ActionValidatable
 {
@@ -45,8 +46,12 @@ trait ActionValidatable
 
     private function runMethod(array $args, string $methodName): array
     {
-        return array_merge(...array_map(fn ($param, $name) => [
-            $name => (new ReflectionMethod($param, $methodName))->invoke($param),
-        ], $args, array_keys($args)));
+        return array_merge(...array_map(
+            fn ($param, $name) => is_a($param, ValidateItemInterface::class) ? [
+                $name => (new ReflectionMethod($param, $methodName))->invoke($param),
+            ] : [],
+            $args,
+            array_keys($args)
+        ));
     }
 }

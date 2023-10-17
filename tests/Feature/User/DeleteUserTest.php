@@ -15,8 +15,9 @@ class DeleteUserTest extends TestCase
     {
         $user = EloquentUserModel::factory()->create();
 
-        $this->delete("/api/user/{$user->id}")
-            ->assertStatus(200);
+        $this->actingAs($user)->delete("/api/user/{$user->id}", [
+            'password' => 'password',
+        ])->assertStatus(200);
 
         $this->assertDatabaseMissing('users', [
             'name' => $user->name,

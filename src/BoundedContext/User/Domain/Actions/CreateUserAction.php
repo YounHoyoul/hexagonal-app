@@ -15,9 +15,6 @@ use Src\Shared\Domain\Action\ActionValidatable;
 use Src\Shared\Domain\Action\CommandAction;
 use Src\Shared\Domain\Bus\Event\EventBusInterface;
 use Src\Shared\Domain\Contracts\ValidationCheckContract;
-use Src\Shared\Domain\Criteria\Criteria;
-use Src\Shared\Domain\Criteria\Filter;
-use Src\Shared\Domain\Criteria\FilterOperator;
 
 final class CreateUserAction extends CommandAction
 {
@@ -36,9 +33,7 @@ final class CreateUserAction extends CommandAction
         UserPassword $password,
         UserPasswordConfirmation $password_confirmation
     ) {
-        $user = $this->repository->findOneByCriteria(new Criteria(filters: [
-            new Filter('email', FilterOperator::EQUAL, $email->value()),
-        ]));
+        $user = $this->repository->findByEmail($email);
 
         if ($user !== null) {
             throw new UserAlreadyExists();

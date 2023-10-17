@@ -17,6 +17,8 @@ final class DeleteUserController
 
     public function __invoke(Request $request, int $id)
     {
-        $this->commandBus->dispatch(new DeleteUserCommand($id));
+        $this->commandBus->dispatch(
+            new DeleteUserCommand($id, $request->password)
+        );
     }
 }

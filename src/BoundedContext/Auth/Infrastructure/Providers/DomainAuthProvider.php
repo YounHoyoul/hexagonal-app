@@ -34,9 +34,17 @@ class DomainAuthProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return User::fromDomain(
-            $this->queryBus->ask(new GetUserByIdQuery($identifier))
-        );
+        try {
+            return User::fromDomain(
+                $this->queryBus->ask(new GetUserByIdQuery($identifier))
+            );
+        } catch (HandlerFailedException $e) {
+            if (empty($e->getNestedExceptionOfClass(UserNotFound::class))) {
+                throw $e;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -48,12 +56,20 @@ class DomainAuthProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        return User::fromDomain(
-            $this->queryBus->ask(new GetUserByCriteriaQuery(new Criteria(filters: [
-                new Filter('id', FilterOperator::EQUAL, $identifier),
-                new Filter('remember_token', FilterOperator::EQUAL, $token),
-            ])))
-        );
+        try {
+            return User::fromDomain(
+                $this->queryBus->ask(new GetUserByCriteriaQuery(new Criteria(filters: [
+                    new Filter('id', FilterOperator::EQUAL, $identifier),
+                    new Filter('remember_token', FilterOperator::EQUAL, $token),
+                ])))
+            );
+        } catch (HandlerFailedException $e) {
+            if (empty($e->getNestedExceptionOfClass(UserNotFound::class))) {
+                throw $e;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -82,11 +98,7 @@ class DomainAuthProvider implements UserProvider
                 new Filter('email', FilterOperator::EQUAL, $credentials['email']),
             ])));
 
-            $user = User::fromDomain($userResponse);
-
-            if ($this->validateCredentials($user, $credentials)) {
-                return $user;
-            }
+            return User::fromDomain($userResponse);
         } catch (HandlerFailedException $e) {
             if (empty($e->getNestedExceptionOfClass(UserNotFound::class))) {
                 throw $e;

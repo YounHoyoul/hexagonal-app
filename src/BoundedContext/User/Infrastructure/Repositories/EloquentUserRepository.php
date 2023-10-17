@@ -13,8 +13,11 @@ use Src\BoundedContext\User\Domain\ValueObjects\UserEmail;
 use Src\BoundedContext\User\Domain\ValueObjects\UserEmailVerifiedDate;
 use Src\BoundedContext\User\Domain\ValueObjects\UserId;
 use Src\BoundedContext\User\Domain\ValueObjects\UserName;
+use Src\BoundedContext\User\Domain\ValueObjects\UserPassword;
 use Src\BoundedContext\User\Domain\ValueObjects\UserRememberToken;
 use Src\Shared\Domain\Criteria\Criteria;
+use Src\Shared\Domain\Criteria\Filter;
+use Src\Shared\Domain\Criteria\FilterOperator;
 use Src\Shared\Infrastructure\Eloquent\EloquentCriteriaTransformer;
 
 final class EloquentUserRepository implements UserRepositoryInterface
@@ -37,6 +40,21 @@ final class EloquentUserRepository implements UserRepositoryInterface
     public function findOneByCriteria(Criteria $criteria): ?User
     {
         $user = (new EloquentCriteriaTransformer($criteria, $this->eloquentModel))
+            ->builder()
+            ->first();
+
+        if ($user === null) {
+            return null;
+        }
+
+        return $user->toDomain();
+    }
+
+    public function findByEmail(UserEmail $email): ?User
+    {
+        $user = (new EloquentCriteriaTransformer(new Criteria(filters: [
+            new Filter('email', FilterOperator::EQUAL, $email->value()),
+        ]), $this->eloquentModel))
             ->builder()
             ->first();
 
@@ -116,6 +134,19 @@ final class EloquentUserRepository implements UserRepositoryInterface
             ->update($data);
     }
 
+    public function updatePassword(UserId $id, UserPassword $password): void
+    {
+        $userToUpdate = $this->eloquentModel;
+
+        $data = [
+            'password' => Hash::make($password->value()),
+        ];
+
+        $userToUpdate
+            ->findOrFail($id->value())
+            ->update($data);
+    }
+
     public function updateProfile(
         UserId $id,
         UserName $name,
@@ -123,7 +154,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
         ?UserEmailVerifiedDate $emailVerifiedDate): void
     {
         $user = $this->eloquentModel->findOrFail($id->value());
-        
+
         $user->name = $name->value();
         $user->email = $email->value();
         $user->email_verified_at = $emailVerifiedDate?->value();
