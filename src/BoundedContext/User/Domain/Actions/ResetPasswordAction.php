@@ -35,8 +35,8 @@ class ResetPasswordAction extends CommandAction
             throw new UserNotFound();
         }
 
-        if ($this->tokenRepository->exists($email, $token)) {
-            throw new TokenNotFound();
+        if (! $this->tokenRepository->exists($email, $token)) {
+            throw new TokenNotFound('email');
         }
 
         $this->userRepository->updatePassword($user->id, $password);

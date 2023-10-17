@@ -3,15 +3,12 @@
 namespace Src\BoundedContext\Auth\Infrastructure\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Src\BoundedContext\User\Application\Password\ResetPasswordCommand;
-use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 class NewPasswordController extends Controller
 {
@@ -33,21 +30,12 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        try {
-            $this->commandBus->dispatch(new ResetPasswordCommand(
-                token: $request->token,
-                email: $request->email,
-                password: $request->password,
-                password_confirmation: $request->password_confirmation
-            ));
-        } catch (HandlerFailedException $e) {
-            throw ValidationException::withMessages([
-                'email' => array_map(
-                    fn (Exception $exception) => $exception->getMessage(),
-                    $e->getNestedExceptions()
-                ),
-            ]);
-        }
+        $this->commandBus->dispatch(new ResetPasswordCommand(
+            token: $request->token,
+            email: $request->email,
+            password: $request->password,
+            password_confirmation: $request->password_confirmation
+        ));
 
         return redirect()->route('login')->with('status', __(Password::PASSWORD_RESET));
     }

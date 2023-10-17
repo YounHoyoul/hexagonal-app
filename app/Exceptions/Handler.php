@@ -3,7 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Illuminate\Validation\ValidationException;
+use Src\Shared\Domain\Exceptions\InvalidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +24,10 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function (InvalidationException $e) {
+            throw ValidationException::withMessages([
+                $e->getField() => $e->getMessage(),
+            ]);
         });
     }
 }

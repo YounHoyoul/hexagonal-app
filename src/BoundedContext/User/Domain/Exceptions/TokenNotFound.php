@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Src\BoundedContext\User\Domain\Exceptions;
 
-use Src\Shared\Domain\DomainException;
+use Src\Shared\Domain\Exceptions\InvalidationException;
 use Throwable;
 
-final class TokenNotFound extends DomainException
+final class TokenNotFound extends InvalidationException
 {
-    public function __construct($message = '', $code = 0, Throwable $previous = null)
+    public function __construct($field = '', $message = '', $code = 422, Throwable $previous = null)
     {
-        $message = $message === '' ? 'Token not found' : $message;
-
-        parent::__construct($message, $code, $previous);
+        parent::__construct(
+            $field === '' ? 'token' : $field,
+            $message === '' ? 'Token not found' : $message,
+            $code,
+            $previous
+        );
     }
 }

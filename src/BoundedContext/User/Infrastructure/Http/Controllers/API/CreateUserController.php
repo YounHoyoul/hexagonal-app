@@ -24,24 +24,16 @@ final class CreateUserController
 
     public function __invoke(Request $request)
     {
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $userEmailVerifiedDate = null;
-        $password = $request->input('password');
-        $password_confirmation = $request->input('password_confirmation');
-        $userRememberToken = null;
-
         $this->commandBus->dispatch(new CreateUserCommand(
-            name: $name,
-            email: $email,
-            password: $password,
-            password_confirmation: $password_confirmation
+            name: $request->name,
+            email: $request->email,
+            password: $request->password,
+            password_confirmation: $request->password_confirmation
         ));
 
         $newUser = $this->queryBus->ask(new GetUserByCriteriaQuery(
             new Criteria(filters: [
-                new Filter('email', FilterOperator::EQUAL, $email),
-                new Filter('name', FilterOperator::EQUAL, $name),
+                new Filter('email', FilterOperator::EQUAL, $request->email),
             ])
         ));
 

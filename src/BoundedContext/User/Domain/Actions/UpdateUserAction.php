@@ -10,8 +10,6 @@ use Src\BoundedContext\User\Domain\User;
 use Src\BoundedContext\User\Domain\ValueObjects\UserEmail;
 use Src\BoundedContext\User\Domain\ValueObjects\UserId;
 use Src\BoundedContext\User\Domain\ValueObjects\UserName;
-use Src\BoundedContext\User\Domain\ValueObjects\UserPassword;
-use Src\BoundedContext\User\Domain\ValueObjects\UserPasswordConfirmation;
 use Src\Shared\Domain\Action\ActionValidatable;
 use Src\Shared\Domain\Action\CommandAction;
 use Src\Shared\Domain\Contracts\ValidationCheckContract;
@@ -30,8 +28,6 @@ final class UpdateUserAction extends CommandAction
         UserId $id,
         UserName $name,
         UserEmail $email,
-        UserPassword $password,
-        UserPasswordConfirmation $password_confirmation
     ): void {
         $user = $this->repository->find($id);
 
@@ -43,7 +39,7 @@ final class UpdateUserAction extends CommandAction
             id: $id->value(),
             email: $email->value(),
             name: $name->value(),
-            password: $password->value(),
+            password: null,
             emailVerifiedDate: null,
             rememberToken: null
         ));
